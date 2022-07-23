@@ -1,0 +1,27 @@
+{
+  "name": "solar-inverter-automation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sampathLiyanage/solar_inverter_automation.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sampathLiyanage/solar_inverter_automation/issues"
+  },
+  "homepage": "https://github.com/sampathLiyanage/solar_inverter_automation#readme"
+}
