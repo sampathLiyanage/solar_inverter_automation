@@ -4,7 +4,7 @@ const service = require('./lib/service');
 const express = require('express');
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 80;
 
 app.get('/', async (req, res) => {
   try {
