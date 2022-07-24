@@ -4,7 +4,7 @@ const service = require('./lib/service');
 const express = require('express');
 
 const app = express();
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3000;
 
 app.get('/', async (req, res) => {
   try {
@@ -22,4 +22,6 @@ app.get('/', async (req, res) => {
   }
 })
 
-module.exports = app;
+app.listen(port,() => {
+  console.log(`Server running at port `+port);
+});
