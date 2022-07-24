@@ -16,7 +16,7 @@ app.get('/', async (req, res) => {
       await api.updateSetting(loginData, 'bse_output_source_priority', nextValue);
       res.send(`value updated to ${service.valueMap[nextValue]} based on ${JSON.stringify(summary)} `);
     }
-    res.send('no change required');
+    res.send(`no change required based on ${JSON.stringify(summary)}`);
   } catch (e) {
     res.send(e.toString());
   }
