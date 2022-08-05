@@ -4,7 +4,7 @@ const service = require('./lib/service');
 const express = require('express');
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 80;
 
 const applyChargeDischargeBasedStrategy = async (res) => {
   const loginData = await api.login('plbsam', 'ssakoo');
