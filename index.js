@@ -15,7 +15,7 @@ const handleRequest = async (req, res) => {
   const outputPriority = await api.getSetting(loginData, 'bse_output_source_priority');
   const chargeCurrentSum = await api.getChartDataUptoNowForToday(loginData, 'bt_battery_charging_current', fromTime);
   const dischargeCurrentSum = await api.getChartDataUptoNowForToday(loginData, 'bt_battery_discharge_current', fromTime);
-  const nextValue = service.getNewOutputPrioritySettingBasedOnChargeDischargeData(
+  const nextValue = service.getNewOutputPrioritySetting(
     summary['AC Output Active Power'],
     summary['Battery Voltage'],
     chargeCurrentSum,
@@ -45,17 +45,18 @@ app.get('/', async (req, res) => {
   try {
     await handleRequest(req, res);
   } catch (e) {
+    const date_string = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
     try {
       await new Promise(r => setTimeout(r, 60000));
-      console.log('first request sequence failed. Retrying...');
+      console.log(date_string + ': first request sequence failed. Retrying...');
       await handleRequest(req, res);
     } catch (e) {
       try {
         await new Promise(r => setTimeout(r, 60000));
-        console.log('second request sequence failed. Retrying...');
+        console.log(date_string + ': second request sequence failed. Retrying...');
         await handleRequest(req, res);
       } catch (e) {
-        console.log('Request sequence failed. Giving up...');
+        console.log(date_string + ': Request sequence failed. Giving up...');
         res.send(e.toString());
       }
     }
