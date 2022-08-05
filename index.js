@@ -27,13 +27,13 @@ const applyChargeDischargeBasedStrategy = async (req,res) => {
   if (nextValue) {
     await api.updateSetting(loginData, 'bse_output_source_priority', nextValue);
     res.send({
-      currentStatus: { ...summary, chargeCurrentSum, dischargeCurrentSum, outputPriority: outputPriority?.val },
+      currentStatus: { ...summary, chargedAmpHours: chargeCurrentSum * 0.1, dischargedAmpHours: dischargeCurrentSum * 0.1, outputPriority: outputPriority?.val },
       nextChargePriority: service.valueMap[nextValue],
       message: `Output priority updated to ${service.valueMap[nextValue]}`
     });
   }
   res.send({
-    currentStatus: { ...summary, chargeCurrentSum, dischargeCurrentSum, outputPriority: outputPriority?.val },
+    currentStatus: { ...summary, chargedAmpHours: chargeCurrentSum * 0.1, dischargedAmpHours: dischargeCurrentSum * 0.1, outputPriority: outputPriority?.val },
     nextChargePriority: outputPriority?.val,
     message: `No change required`
   });
