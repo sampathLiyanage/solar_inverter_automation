@@ -60,17 +60,17 @@ const applyVoltageBasedStrategy = async (res) => {
 
 app.get('/', async (req, res) => {
   try {
-    await applyChargeDischargeBasedStrategy(res);
+    await applyChargeDischargeBasedStrategy(req, res);
   } catch (e) {
     try {
       await new Promise(r => setTimeout(r, 60000));
       console.log('first request sequence failed. Retrying...');
-      await applyChargeDischargeBasedStrategy(res);
+      await applyChargeDischargeBasedStrategy(req, res);
     } catch (e) {
       try {
         await new Promise(r => setTimeout(r, 60000));
         console.log('second request sequence failed. Retrying...');
-        await applyChargeDischargeBasedStrategy(res);
+        await applyChargeDischargeBasedStrategy(req, res);
       } catch (e) {
         console.log('Request sequence failed. Giving up...');
         res.send(e.toString());
