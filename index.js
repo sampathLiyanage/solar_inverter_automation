@@ -11,12 +11,13 @@ const applyChargeDischargeBasedStrategy = async (req,res) => {
   const threshold2 = req.query.threshold2 ?? 25;
   const multiplier = req.query.multiplier ?? 1;
   const loginData = await api.login('plbsam', 'ssakoo');
-  const fromTime = '07:00:00';
+  const fromTime = '06:00:00';
   const summary = await api.getSummary(loginData);
   const outputPriority = await api.getSetting(loginData, 'bse_output_source_priority');
   const chargeCurrentSum = await api.getChartDataUptoNowForToday(loginData, 'bt_battery_charging_current', fromTime);
   const dischargeCurrentSum = await api.getChartDataUptoNowForToday(loginData, 'bt_battery_discharge_current', fromTime);
   const nextValue = service.getNewOutputPrioritySettingBasedOnChargeDischargeData(
+    summary['AC Output Active Power'],
     summary['Battery Voltage'],
     chargeCurrentSum,
     dischargeCurrentSum,
@@ -42,6 +43,7 @@ const applyChargeDischargeBasedStrategy = async (req,res) => {
 }
 
 const applyVoltageBasedStrategy = async (res) => {
+  const loginData = await api.login('plbsam', 'ssakoo');
   const summary = await api.getSummary(loginData);
   const outputPriority = await api.getSetting(loginData, 'bse_output_source_priority');
   const nextValue = service.getNewOutputPrioritySetting(summary['Battery Voltage'], summary['Timestamp'], outputPriority.val);
