@@ -7,8 +7,8 @@ const app = express();
 const port = process.env.PORT || 80;
 
 const applyChargeDischargeBasedStrategy = async (req,res) => {
-  const threshold1 = req.query.threshold1 ?? 500;
-  const threshold2 = req.query.threshold2 ?? 250;
+  const threshold1 = req.query.threshold1 ?? 50;
+  const threshold2 = req.query.threshold2 ?? 25;
   const multiplier = req.query.multiplier ?? 1;
   const loginData = await api.login('plbsam', 'ssakoo');
   const fromTime = '07:00:00';
