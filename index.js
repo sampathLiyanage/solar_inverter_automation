@@ -9,6 +9,7 @@ const port = process.env.PORT || 80;
 const applyChargeDischargeBasedStrategy = async (req,res) => {
   const threshold1 = req.query.threshold1 ?? 500;
   const threshold2 = req.query.threshold2 ?? 250;
+  const multiplier = req.query.multiplier ?? 1;
   const loginData = await api.login('plbsam', 'ssakoo');
   const fromTime = '07:00:00';
   const summary = await api.getSummary(loginData);
@@ -22,18 +23,19 @@ const applyChargeDischargeBasedStrategy = async (req,res) => {
     summary['Timestamp'],
     outputPriority.val,
     threshold1,
-    threshold2
+    threshold2,
+    multiplier
   );
   if (nextValue) {
     await api.updateSetting(loginData, 'bse_output_source_priority', nextValue);
     res.send({
-      currentStatus: { ...summary, chargedAmpHours: chargeCurrentSum * 0.1, dischargedAmpHours: dischargeCurrentSum * 0.1, outputPriority: outputPriority?.val },
+      currentStatus: { ...summary, chargedAmpHours: chargeCurrentSum * 0.1 * multiplier, dischargedAmpHours: dischargeCurrentSum * 0.1 * multiplier, outputPriority: outputPriority?.val },
       nextChargePriority: service.valueMap[nextValue],
       message: `Output priority updated to ${service.valueMap[nextValue]}`
     });
   }
   res.send({
-    currentStatus: { ...summary, chargedAmpHours: chargeCurrentSum * 0.1, dischargedAmpHours: dischargeCurrentSum * 0.1, outputPriority: outputPriority?.val },
+    currentStatus: { ...summary, chargedAmpHours: chargeCurrentSum * 0.1 * multiplier, dischargedAmpHours: dischargeCurrentSum * 0.1 * multiplier, outputPriority: outputPriority?.val },
     nextChargePriority: outputPriority?.val,
     message: `No change required`
   });
