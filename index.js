@@ -1,4 +1,3 @@
-const sha1 = require('./lib/sha1');
 const api = require('./lib/api');
 const service = require('./lib/service');
 const express = require('express');
@@ -6,7 +5,7 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 80;
 
-const applyChargeDischargeBasedStrategy = async (req,res) => {
+const handleRequest = async (req, res) => {
   const threshold1 = req.query.threshold1 ?? 50;
   const threshold2 = req.query.threshold2 ?? 25;
   const multiplier = req.query.multiplier ?? 1;
@@ -42,39 +41,19 @@ const applyChargeDischargeBasedStrategy = async (req,res) => {
   });
 }
 
-const applyVoltageBasedStrategy = async (res) => {
-  const loginData = await api.login('plbsam', 'ssakoo');
-  const summary = await api.getSummary(loginData);
-  const outputPriority = await api.getSetting(loginData, 'bse_output_source_priority');
-  const nextValue = service.getNewOutputPrioritySetting(summary['Battery Voltage'], summary['Timestamp'], outputPriority.val);
-  if (nextValue) {
-    await api.updateSetting(loginData, 'bse_output_source_priority', nextValue);
-    res.send({
-      currentStatus: { ...summary, outputPriority: outputPriority?.val },
-      nextChargePriority: service.valueMap[nextValue],
-      message: `Output priority updated to ${service.valueMap[nextValue]}`
-    });
-  }
-  res.send({
-    currentStatus: { ...summary, outputPriority: outputPriority?.val },
-    nextChargePriority: outputPriority?.val,
-    message: `No change required`
-  });
-}
-
 app.get('/', async (req, res) => {
   try {
-    await applyChargeDischargeBasedStrategy(req, res);
+    await handleRequest(req, res);
   } catch (e) {
     try {
       await new Promise(r => setTimeout(r, 60000));
       console.log('first request sequence failed. Retrying...');
-      await applyChargeDischargeBasedStrategy(req, res);
+      await handleRequest(req, res);
     } catch (e) {
       try {
         await new Promise(r => setTimeout(r, 60000));
         console.log('second request sequence failed. Retrying...');
-        await applyChargeDischargeBasedStrategy(req, res);
+        await handleRequest(req, res);
       } catch (e) {
         console.log('Request sequence failed. Giving up...');
         res.send(e.toString());
@@ -83,6 +62,6 @@ app.get('/', async (req, res) => {
   }
 })
 
-app.listen(port,() => {
-  console.log(`Server running at port `+port);
+app.listen(port, () => {
+  console.log(`Server running at port ` + port);
 });
