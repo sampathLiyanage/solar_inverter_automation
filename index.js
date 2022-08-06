@@ -23,7 +23,7 @@ const handleRequest = async (req, res) => {
     threshold1,
     threshold2
   );
-  const currentStatus = { ...summary, chargedAmpHours: chargeCurrentSum * 0.1, dischargedAmpHours: dischargeCurrentSum * 0.1 * 0.65, outputPriority: outputPriority?.val };
+  const currentStatus = { ...summary, chargedAmpHours: chargeCurrentSum * 0.1, dischargedAmpHours: dischargeCurrentSum * 0.1 * service.DISCHARGE_MULTIPLIER, outputPriority: outputPriority?.val };
   if (nextValue) {
     await api.updateSetting(loginData, 'bse_output_source_priority', nextValue);
     res.send({
