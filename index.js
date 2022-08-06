@@ -8,7 +8,6 @@ const port = process.env.PORT || 80;
 const handleRequest = async (req, res) => {
   const threshold1 = req.query.threshold1 ?? 50;
   const threshold2 = req.query.threshold2 ?? 20;
-  const multiplier = req.query.multiplier ?? 1;
   const loginData = await api.login('plbsam', 'ssakoo');
   const fromTime = '06:00:00';
   const summary = await api.getSummary(loginData);
@@ -22,8 +21,7 @@ const handleRequest = async (req, res) => {
     summary['Timestamp'],
     outputPriority.val,
     threshold1,
-    threshold2,
-    multiplier
+    threshold2
   );
   if (nextValue) {
     await api.updateSetting(loginData, 'bse_output_source_priority', nextValue);
