@@ -16,7 +16,6 @@ const handleRequest = async (req, res) => {
   const chargeCurrentSum = await api.getChartDataUptoNowForToday(loginData, 'bt_battery_charging_current', fromTime);
   const dischargeCurrentSum = await api.getChartDataUptoNowForToday(loginData, 'bt_battery_discharge_current', fromTime);
   const nextValue = service.getNewOutputPrioritySetting(
-    summary['AC Output Active Power'],
     summary['Battery Voltage'],
     chargeCurrentSum,
     dischargeCurrentSum,
